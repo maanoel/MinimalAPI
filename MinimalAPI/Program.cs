@@ -67,7 +67,9 @@ app.MapPut("/fornecedor/{id}", async (
   Fornecedor fornecedor
 ) =>
 {
-  var fornecedorBanco = await context.Fornecedores.FindAsync(id);
+  var fornecedorBanco = await context.Fornecedores.AsNoTracking<Fornecedor>()
+                                                  .FirstOrDefaultAsync(f => f.Id == id);
+
   if (fornecedorBanco == null) return Results.NotFound();
 
   if (!MiniValidator.TryValidate(fornecedor, out var errors))
